@@ -2,30 +2,41 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Porto Database</title>
     <link rel="stylesheet" href="style.css"> </head>
 <body>
 
-    <div id="toolbar">
-        <input type="text" id="searchInput" placeholder="بحث بالاسم أو المبنى...">
-        <button id="addBtn">➕</button>
-    </div>
+    <header class="navbar">
+        <div class="logo">Porto Database</div>
+        <div class="search-container">
+            <input type="text" id="searchInput" placeholder="بحث بالاسم أو المبنى...">
+            <button class="btn-search">بحث</button>
+        </div>
+        <div class="actions">
+            <button class="add-btn" id="openAddModalBtn">➕</button>
+            <button class="login-status-btn">دخول</button>
+        </div>
+    </header>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>الإجمالي</th>
-                <th>الأقساط</th>
-                <th>المقدم</th>
-                <th>المساحة</th>
-                <th>المبنى</th>
-                <th>المالك</th>
-                <th>إجراءات</th>
-            </tr>
-        </thead>
-        <tbody id="databaseTableBody">
-            </tbody>
-    </table>
+    <main class="table-container">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>الإجمالي</th>
+                    <th>الأقساط</th>
+                    <th>المقدم</th>
+                    <th>الاتجاه / الفيو</th>
+                    <th>المساحة / التفاصيل</th>
+                    <th>المبنى</th>
+                    <th>المالك</th>
+                    <th>إجراءات</th>
+                </tr>
+            </thead>
+            <tbody id="databaseTableBody">
+                </tbody>
+        </table>
+    </main>
 
     <script src="app.js"></script>
 </body>
