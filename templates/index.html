@@ -75,7 +75,6 @@
                     <td class="text-success fw-bold">{{ "{:,.0f}".format(down + sum_inst) }}</td>
                 </tr>
 
-                <!-- Modal التعديل -->
                 <div class="modal fade" id="edit{{ item.id }}" tabindex="-1">
                     <div class="modal-dialog modal-lg modal-dialog-centered">
                         <div class="modal-content">
@@ -100,7 +99,11 @@
                                     </div>
                                 </div>
                                 <div class="modal-footer border-0">
-                                    {% if session.get('logged_in') %}<button type="submit" class="btn btn-success w-100">حفظ</button>{% endif %}
+                                    {% if session.get('logged_in') %}
+                                        <button type="submit" class="btn btn-success w-100">حفظ التعديلات</button>
+                                    {% else %}
+                                        <button type="button" class="btn btn-secondary w-100" disabled>عرض فقط (يتطلب تسجيل الدخول للتعديل)</button>
+                                    {% endif %}
                                 </div>
                             </form>
                         </div>
@@ -111,13 +114,14 @@
         </table>
     </div>
 
-    <!-- Modal الإضافة والرفع -->
     <div class="modal fade" id="addModal" tabindex="-1">
         <div class="modal-dialog modal-lg modal-dialog-centered">
             <div class="modal-content">
-                <div class="modal-header border-secondary"><h6>إضافة بيانات</h6><button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button></div>
+                <div class="modal-header border-secondary">
+                    <h6>إضافة بيانات جديدة</h6>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
                 <div class="modal-body">
-                    <!-- رفع إكسيل -->
                     <form action="/upload" method="POST" enctype="multipart/form-data" class="mb-4 pb-3 border-bottom border-secondary">
                         <label class="small text-info mb-2">استيراد Excel (المالك، الدور، المبنى، المساحة، المنطقة، الفيو، المقدم، قيمة القسط، عدد الأقساط)</label>
                         <div class="input-group">
@@ -125,7 +129,7 @@
                             <button type="submit" class="btn btn-info text-white">رفع</button>
                         </div>
                     </form>
-                    <!-- إضافة يدوي -->
+                    
                     <form action="/add" method="POST">
                         <div class="row g-2">
                             <div class="col-md-6"><input type="text" name="owner" class="form-control" placeholder="المالك" required></div>
@@ -151,19 +155,40 @@
     <script>
         function setupCalculations() {
             document.querySelectorAll('.modal').forEach(modal => {
-                const inputs = modal.querySelectorAll('.down_val, .inst_val, .inst_num');
+                const downInput = modal.querySelector('.down_val');
+                const instValInput = modal.querySelector('.inst_val');
+                const instNumInput = modal.querySelector('.inst_num');
+                
+                // تخطي الـ Modal إذا لم يحتوي على حقول الحسابات (أمان إضافي)
+                if (!downInput || !instValInput || !instNumInput) return;
+
+                const inputs = [downInput, instValInput, instNumInput];
+                
                 const calc = () => {
-                    let down = parseFloat(modal.querySelector('.down_val').value.replace(/,/g, '')) || 0;
-                    let iVal = parseFloat(modal.querySelector('.inst_val').value.replace(/,/g, '')) || 0;
-                    let iNum = parseFloat(modal.querySelector('.inst_num').value) || 0;
+                    let down = parseFloat(downInput.value.replace(/,/g, '')) || 0;
+                    let iVal = parseFloat(instValInput.value.replace(/,/g, '')) || 0;
+                    let iNum = parseFloat(instNumInput.value) || 0;
                     let sum = iVal * iNum;
-                    modal.querySelector('.total_inst').value = sum.toLocaleString();
-                    modal.querySelector('.total_all').value = (down + sum).toLocaleString();
+                    
+                    const totalInstField = modal.querySelector('.total_inst');
+                    const totalAllField = modal.querySelector('.total_all');
+                    
+                    if (totalInstField) totalInstField.value = sum.toLocaleString('en-US');
+                    if (totalAllField) totalAllField.value = (down + sum).toLocaleString('en-US');
                 };
-                inputs.forEach(i => i.addEventListener('input', calc));
+                
+                // ربط المستمع التلقائي عند الكتابة والتعديل الفوري
+                inputs.forEach(i => {
+                    i.removeEventListener('input', calc);
+                    i.addEventListener('input', calc);
+                });
+                
+                // تشغيل الدالة فوراً لحساب الأرقام المخزنة مسبقاً عند فتح الـ Modal
                 calc();
             });
         }
+
+        // إطلاق الحسابات بمجرد اكتمال ظهور أي نافذة Modal على الشاشة
         document.addEventListener('shown.bs.modal', setupCalculations);
     </script>
 </body>
