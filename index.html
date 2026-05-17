@@ -23,19 +23,15 @@
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h5 class="m-0 text-primary">Porto Database</h5>
         <div class="d-flex gap-2">
-            {% if session.get('logged_in') %}
-                <button class="add-btn" data-bs-toggle="modal" data-bs-target="#addModal">+</button>
-                <a href="/logout" class="btn btn-outline-danger btn-sm">خروج</a>
-            {% else %}
-                <a href="/login" class="btn btn-primary btn-sm">دخول</a>
-            {% endif %}
+            <button class="add-btn" data-bs-toggle="modal" data-bs-target="#addModal">+</button>
+            <a href="login.html" class="btn btn-primary btn-sm">دخول</a>
         </div>
     </div>
 
-    <form method="GET" class="mb-3">
+    <form class="mb-3" onsubmit="event.preventDefault();">
         <div class="input-group">
-            <input type="text" name="search" class="form-control bg-dark text-white border-secondary" placeholder="بحث بالاسم أو المبنى..." value="{{ request.args.get('search', '') }}">
-            <button class="btn btn-primary">بحث</button>
+            <input type="text" class="form-control bg-dark text-white border-secondary" placeholder="بحث بالاسم أو المبنى...">
+            <button class="btn btn-primary" type="button">بحث</button>
         </div>
     </form>
 
@@ -53,94 +49,87 @@
                 </tr>
             </thead>
             <tbody>
-                {% for item in items %}
-                {% set down = item.down | replace(',', '') | float if item.down else 0 %}
-                {% set i_val = item.inst_val | replace(',', '') | float if item.inst_val else 0 %}
-                {% set i_num = item.inst_num | float if item.inst_num else 0 %}
-                {% set sum_inst = i_val * i_num %}
                 <tr>
                     <td>
                         <div class="d-flex gap-2 justify-content-center">
-                            <span class="action-link" data-bs-toggle="modal" data-bs-target="#edit{{ item.id }}">&gt;</span>
-                            {% if session.get('logged_in') %}
-                            <a href="/delete/{{ item.id }}" class="text-danger text-decoration-none" onclick="return confirm('حذف؟')">🗑️</a>
-                            {% endif %}
+                            <span class="action-link" data-bs-toggle="modal" data-bs-target="#editDemo">&gt;</span>
+                            <span class="text-danger" style="cursor:pointer;" onclick="confirm('حذف؟')">🗑️</span>
                         </div>
                     </td>
-                    <td class="fw-bold">{{ item.owner }}</td>
-                    <td>{{ item.bld }}</td>
-                    <td>{{ item.area }}</td>
-                    <td class="text-info">{{ "{:,.0f}".format(down) }}</td>
-                    <td class="text-danger">{{ "{:,.0f}".format(sum_inst) }}</td>
-                    <td class="text-success fw-bold">{{ "{:,.0f}".format(down + sum_inst) }}</td>
+                    <td class="fw-bold">أحمد محمد عبد الله</td>
+                    <td>مبنى A1</td>
+                    <td>120 م²</td>
+                    <td class="text-info">50,000</td>
+                    <td class="text-danger">150,000</td>
+                    <td class="text-success fw-bold">200,000</td>
                 </tr>
 
-                <!-- Modal التعديل -->
-                <div class="modal fade" id="edit{{ item.id }}" tabindex="-1">
+                <div class="modal fade" id="editDemo" tabindex="-1">
                     <div class="modal-dialog modal-lg modal-dialog-centered">
                         <div class="modal-content">
                             <div class="modal-header border-secondary">
-                                <h6>تعديل: {{ item.owner }}</h6>
+                                <h6>تعديل: أحمد محمد عبد الله</h6>
                                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                             </div>
-                            <form action="/edit/{{ item.id }}" method="POST">
+                            <form onsubmit="event.preventDefault();">
                                 <div class="modal-body">
                                     <div class="row g-2">
-                                        <div class="col-md-6"><label class="small text-secondary">المالك</label><input type="text" name="owner" class="form-control" value="{{ item.owner }}"></div>
-                                        <div class="col-md-3"><label class="small text-secondary">المبنى</label><input type="text" name="bld" class="form-control" value="{{ item.bld }}"></div>
-                                        <div class="col-md-3"><label class="small text-secondary">الدور</label><input type="text" name="floor" class="form-control" value="{{ item.floor }}"></div>
-                                        <div class="col-md-4"><label class="small text-secondary">المساحة</label><input type="text" name="area" class="form-control" value="{{ item.area }}"></div>
-                                        <div class="col-md-4"><label class="small text-secondary">المنطقة</label><input type="text" name="zone" class="form-control" value="{{ item.zone }}"></div>
-                                        <div class="col-md-4"><label class="small text-secondary">الفيو</label><input type="text" name="view" class="form-control" value="{{ item.view }}"></div>
-                                        <div class="col-md-4"><label class="small text-primary">المقدم</label><input type="text" name="down" class="form-control down_val" value="{{ item.down }}"></div>
-                                        <div class="col-md-4"><label class="small text-primary">القسط</label><input type="text" name="inst_val" class="form-control inst_val" value="{{ item.inst_val }}"></div>
-                                        <div class="col-md-4"><label class="small text-primary">العدد</label><input type="number" name="inst_num" class="form-control inst_num" value="{{ item.inst_num }}"></div>
+                                        <div class="col-md-6"><label class="small text-secondary">المالك</label><input type="text" class="form-control" value="أحمد محمد عبد الله"></div>
+                                        <div class="col-md-3"><label class="small text-secondary">المبنى</label><input type="text" class="form-control" value="مبنى A1"></div>
+                                        <div class="col-md-3"><label class="small text-secondary">الدور</label><input type="text" class="form-control" value="الثالث"></div>
+                                        <div class="col-md-4"><label class="small text-secondary">المساحة</label><input type="text" class="form-control" value="120 م²"></div>
+                                        <div class="col-md-4"><label class="small text-secondary">المنطقة</label><input type="text" class="form-control" value="المرحلة الأولى"></div>
+                                        <div class="col-md-4"><label class="small text-secondary">الفيو</label><input type="text" class="form-control" value="لاندسكيب"></div>
+                                        <div class="col-md-4"><label class="small text-primary">المقدم</label><input type="text" class="form-control down_val" value="50,000"></div>
+                                        <div class="col-md-4"><label class="small text-primary">القسط</label><input type="text" class="form-control inst_val" value="5,000"></div>
+                                        <div class="col-md-4"><label class="small text-primary">العدد</label><input type="number" class="form-control inst_num" value="30"></div>
                                         <div class="col-md-6"><label class="small text-danger">مجموع الأقساط</label><input type="text" class="form-control calc-box total_inst" readonly></div>
                                         <div class="col-md-6"><label class="small text-success">الإجمالي الكلي</label><input type="text" class="form-control calc-box total_all" readonly></div>
                                     </div>
                                 </div>
                                 <div class="modal-footer border-0">
-                                    {% if session.get('logged_in') %}<button type="submit" class="btn btn-success w-100">حفظ</button>{% endif %}
+                                    <button type="button" class="btn btn-success w-100" data-bs-dismiss="modal">حفظ التعديلات (معاينة)</button>
                                 </div>
                             </form>
                         </div>
                     </div>
                 </div>
-                {% endfor %}
+
             </tbody>
         </table>
     </div>
 
-    <!-- Modal الإضافة والرفع -->
     <div class="modal fade" id="addModal" tabindex="-1">
         <div class="modal-dialog modal-lg modal-dialog-centered">
             <div class="modal-content">
-                <div class="modal-header border-secondary"><h6>إضافة بيانات</h6><button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button></div>
+                <div class="modal-header border-secondary">
+                    <h6>إضافة بيانات جديدة</h6>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
                 <div class="modal-body">
-                    <!-- رفع إكسيل -->
-                    <form action="/upload" method="POST" enctype="multipart/form-data" class="mb-4 pb-3 border-bottom border-secondary">
-                        <label class="small text-info mb-2">استيراد Excel (المالك، الدور، المبنى، المساحة، المنطقة، الفيو، المقدم، قيمة القسط، عدد الأقساط)</label>
+                    <form class="mb-4 pb-3 border-bottom border-secondary" onsubmit="event.preventDefault();">
+                        <label class="small text-info mb-2">استيراد Excel</label>
                         <div class="input-group">
-                            <input type="file" name="excel_file" class="form-control" accept=".xlsx, .xls" required>
-                            <button type="submit" class="btn btn-info text-white">رفع</button>
+                            <input type="file" class="form-control" accept=".xlsx, .xls" required>
+                            <button type="button" class="btn btn-info text-white">رفع</button>
                         </div>
                     </form>
-                    <!-- إضافة يدوي -->
-                    <form action="/add" method="POST">
+                     
+                    <form onsubmit="event.preventDefault();">
                         <div class="row g-2">
-                            <div class="col-md-6"><input type="text" name="owner" class="form-control" placeholder="المالك" required></div>
-                            <div class="col-md-3"><input type="text" name="bld" class="form-control" placeholder="المبنى"></div>
-                            <div class="col-md-3"><input type="text" name="floor" class="form-control" placeholder="الدور"></div>
-                            <div class="col-md-4"><input type="text" name="area" class="form-control" placeholder="المساحة"></div>
-                            <div class="col-md-4"><input type="text" name="zone" class="form-control" placeholder="المنطقة"></div>
-                            <div class="col-md-4"><input type="text" name="view" class="form-control" placeholder="الفيو"></div>
-                            <div class="col-md-4"><input type="text" name="down" class="form-control down_val" placeholder="المقدم"></div>
-                            <div class="col-md-4"><input type="text" name="inst_val" class="form-control inst_val" placeholder="القسط"></div>
-                            <div class="col-md-4"><input type="number" name="inst_num" class="form-control inst_num" placeholder="العدد"></div>
+                            <div class="col-md-6"><input type="text" class="form-control" placeholder="المالك" required></div>
+                            <div class="col-md-3"><input type="text" class="form-control" placeholder="المبنى"></div>
+                            <div class="col-md-3"><input type="text" class="form-control" placeholder="الدور"></div>
+                            <div class="col-md-4"><input type="text" class="form-control" placeholder="المساحة"></div>
+                            <div class="col-md-4"><input type="text" class="form-control" placeholder="المنطقة"></div>
+                            <div class="col-md-4"><input type="text" class="form-control" placeholder="الفيو"></div>
+                            <div class="col-md-4"><input type="text" class="form-control down_val" placeholder="المقدم"></div>
+                            <div class="col-md-4"><input type="text" class="form-control inst_val" placeholder="القسط"></div>
+                            <div class="col-md-4"><input type="number" class="form-control inst_num" placeholder="العدد"></div>
                             <div class="col-md-6"><input type="text" class="form-control calc-box total_inst" placeholder="مجموع الأقساط" readonly></div>
                             <div class="col-md-6"><input type="text" class="form-control calc-box total_all" placeholder="الإجمالي" readonly></div>
                         </div>
-                        <button type="submit" class="btn btn-success w-100 mt-3">إضافة يدوية</button>
+                        <button type="button" class="btn btn-success w-100 mt-3" data-bs-dismiss="modal">إضافة يدوية</button>
                     </form>
                 </div>
             </div>
@@ -151,16 +140,32 @@
     <script>
         function setupCalculations() {
             document.querySelectorAll('.modal').forEach(modal => {
-                const inputs = modal.querySelectorAll('.down_val, .inst_val, .inst_num');
+                const downInput = modal.querySelector('.down_val');
+                const instValInput = modal.querySelector('.inst_val');
+                const instNumInput = modal.querySelector('.inst_num');
+                
+                if (!downInput || !instValInput || !instNumInput) return;
+
+                const inputs = [downInput, instValInput, instNumInput];
+                
                 const calc = () => {
-                    let down = parseFloat(modal.querySelector('.down_val').value.replace(/,/g, '')) || 0;
-                    let iVal = parseFloat(modal.querySelector('.inst_val').value.replace(/,/g, '')) || 0;
-                    let iNum = parseFloat(modal.querySelector('.inst_num').value) || 0;
+                    let down = parseFloat(downInput.value.replace(/,/g, '')) || 0;
+                    let iVal = parseFloat(instValInput.value.replace(/,/g, '')) || 0;
+                    let iNum = parseFloat(instNumInput.value) || 0;
                     let sum = iVal * iNum;
-                    modal.querySelector('.total_inst').value = sum.toLocaleString();
-                    modal.querySelector('.total_all').value = (down + sum).toLocaleString();
+                    
+                    const totalInstField = modal.querySelector('.total_inst');
+                    const totalAllField = modal.querySelector('.total_all');
+                    
+                    if (totalInstField) totalInstField.value = sum.toLocaleString('en-US');
+                    if (totalAllField) totalAllField.value = (down + sum).toLocaleString('en-US');
                 };
-                inputs.forEach(i => i.addEventListener('input', calc));
+                
+                inputs.forEach(i => {
+                    i.removeEventListener('input', calc);
+                    i.addEventListener('input', calc);
+                });
+                
                 calc();
             });
         }
