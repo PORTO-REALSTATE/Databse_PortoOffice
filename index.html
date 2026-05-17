@@ -3,21 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نظام إدارة العقارات - Porto Database</title>
+    <title>نظام إدارة العقارات</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body { background: #0d1117; color: #c9d1d9; font-family: 'Segoe UI', sans-serif; }
         .table-responsive { border-radius: 8px; background: #161b22; margin-top: 10px; }
-        .table { min-width: 1000px; color: #c9d1d9; vertical-align: middle; }
+        .table { min-width: 900px; color: #c9d1d9; vertical-align: middle; }
         .table th { background: #21262d; color: #8b949e; border: none; font-size: 0.85rem; }
-        .table td { border-bottom: 1px solid #30363d; padding: 12px 8px; font-size: 0.9rem; }
+        .table td { border-bottom: 1px solid #30363d; padding: 12px 8px; }
         .action-link { color: #58a6ff; text-decoration: none; font-weight: bold; font-size: 1.2rem; cursor: pointer; }
         .modal-content { background: #1c2128; border: 1px solid #444c56; color: #fff; border-radius: 12px; }
         .form-control { background: #fff !important; color: #000 !important; font-weight: bold; }
         .calc-box { background: #f0f0f0 !important; color: #d63384 !important; border: 2px solid #dee2e6 !important; cursor: not-allowed; }
         .add-btn { background: #238636; color: white; border-radius: 50%; width: 40px; height: 40px; border: none; font-size: 24px; display: flex; align-items: center; justify-content: center; }
         
-        /* إخفاء أدوات التحكم افتراضياً حتى يتم تسجيل الدخول */
+        /* التحكم في إخفاء الأدوات المحمية بكلمة المرور */
         .admin-only { display: none !important; }
     </style>
 </head>
@@ -33,7 +33,7 @@
 
     <form class="mb-3" onsubmit="event.preventDefault(); handleSearch();">
         <div class="input-group">
-            <input type="text" id="searchInput" class="form-control bg-dark text-white border-secondary" placeholder="بحث بالاسم، المبنى، أو نوع الوحدة..." onkeyup="handleSearch()">
+            <input type="text" id="searchInput" class="form-control bg-dark text-white border-secondary" placeholder="بحث بالاسم أو المبنى..." onkeyup="handleSearch()">
             <button class="btn btn-primary" type="button" onclick="handleSearch()">بحث</button>
         </div>
     </form>
@@ -43,195 +43,194 @@
             <thead>
                 <tr>
                     <th>⚙️</th>
-                    <th>المعرف / الكود</th>
-                    <th>نوع الوحدة</th>
+                    <th>المالك</th>
+                    <th>المبنى</th>
                     <th>المساحة</th>
-                    <th>المبنى / الحالة</th>
-                    <th>الفيو</th>
                     <th>المقدم</th>
+                    <th>الأقساط</th>
                     <th>الإجمالي</th>
                 </tr>
             </thead>
             <tbody>
-                <tr data-row='{"id":"1kahraba8","type":"12360وااكنص","area":"تشطيباكوا","bld":"11,700,000","view":"-","down":"3,036,000","total":"11,700,000"}'>
+                <tr>
                     <td>
                         <div class="d-flex gap-2 justify-content-center">
-                            <span class="action-link" onclick="openEditModal(this)">&gt;</span>
-                            <span class="text-danger admin-only" style="cursor:pointer;" onclick="if(confirm('حذف هذه الوحدة؟')) { this.closest('tr').remove(); }">🗑️</span>
+                            <span class="action-link" data-bs-toggle="modal" data-bs-target="#edit1">&gt;</span>
+                            <span class="text-danger admin-only" style="cursor:pointer;" onclick="if(confirm('حذف؟')) { this.closest('tr').remove(); }">🗑️</span>
                         </div>
                     </td>
-                    <td class="fw-bold text-white">1kahraba8</td><td>12360وااكنص</td><td>تشطيباكوا</td><td>11,700,000</td><td>قبلي</td><td class="text-info">3,036,000</td><td class="text-success fw-bold">11,700,000</td>
+                    <td class="fw-bold">1kahraba8</td><td>12360وااكنص</td><td>تشطيباكوا</td><td class="text-info">3,036,000</td><td class="text-danger">11,700,000</td><td class="text-success fw-bold">11,700,000</td>
                 </tr>
-                <tr data-row='{"id":"2kahraba3","type":"22230","area":"نيومفروش","bld":"-","view":"قبلي","down":"-","total":"-"}'>
+                <tr>
                     <td>
                         <div class="d-flex gap-2 justify-content-center">
-                            <span class="action-link" onclick="openEditModal(this)">&gt;</span>
-                            <span class="text-danger admin-only" style="cursor:pointer;" onclick="if(confirm('حذف هذه الوحدة؟')) { this.closest('tr').remove(); }">🗑️</span>
+                            <span class="action-link" data-bs-toggle="modal" data-bs-target="#edit2">&gt;</span>
+                            <span class="text-danger admin-only" style="cursor:pointer;" onclick="if(confirm('حذف؟')) { this.closest('tr').remove(); }">🗑️</span>
                         </div>
                     </td>
-                    <td class="fw-bold text-white">2kahraba3</td><td>22230</td><td>نيومفروش</td><td>-</td><td>قبلي</td><td class="text-info">-</td><td class="text-success fw-bold">-</td>
+                    <td class="fw-bold">2kahraba3</td><td>22230</td><td>نيومفروش</td><td class="text-info">-</td><td class="text-danger">-</td><td class="text-success fw-bold">-</td>
                 </tr>
-                <tr data-row='{"id":"3kahraba","type":"ارضي بجاردن","area":"22760نيومفروش","bld":"2,100,000","view":"قبلي","down":"3,178,000","total":"2,100,000"}'>
+                <tr>
                     <td>
                         <div class="d-flex gap-2 justify-content-center">
-                            <span class="action-link" onclick="openEditModal(this)">&gt;</span>
-                            <span class="text-danger admin-only" style="cursor:pointer;" onclick="if(confirm('حذف هذه الوحدة؟')) { this.closest('tr').remove(); }">🗑️</span>
+                            <span class="action-link" data-bs-toggle="modal" data-bs-target="#edit3">&gt;</span>
+                            <span class="text-danger admin-only" style="cursor:pointer;" onclick="if(confirm('حذف؟')) { this.closest('tr').remove(); }">🗑️</span>
                         </div>
                     </td>
-                    <td class="fw-bold text-white">3kahraba</td><td>ارضي بجاردن</td><td>22760نيومفروش</td><td>2,100,000</td><td>قبلي</td><td class="text-info">3,178,000</td><td class="text-success fw-bold">2,100,000</td>
+                    <td class="fw-bold">3kahraba</td><td>ارضي بجاردن</td><td>22760نيومفروش</td><td class="text-info">3,178,000</td><td class="text-danger">2,100,000</td><td class="text-success fw-bold">2,100,000</td>
                 </tr>
-                <tr data-row='{"id":"4kahraba6","type":"13860","area":"مشايا جوديعه","bld":"1,000,000","view":"قبلي","down":"2,896,000","total":"1,000,000"}'>
+                <tr>
                     <td>
                         <div class="d-flex gap-2 justify-content-center">
-                            <span class="action-link" onclick="openEditModal(this)">&gt;</span>
-                            <span class="text-danger admin-only" style="cursor:pointer;" onclick="if(confirm('حذف هذه الوحدة؟')) { this.closest('tr').remove(); }">🗑️</span>
+                            <span class="action-link" data-bs-toggle="modal" data-bs-target="#edit4">&gt;</span>
+                            <span class="text-danger admin-only" style="cursor:pointer;" onclick="if(confirm('حذف؟')) { this.closest('tr').remove(); }">🗑️</span>
                         </div>
                     </td>
-                    <td class="fw-bold text-white">4kahraba6</td><td>13860</td><td>مشايا جوديعه</td><td>1,000,000</td><td>قبلي</td><td class="text-info">2,896,000</td><td class="text-success fw-bold">1,000,000</td>
+                    <td class="fw-bold">4kahraba6</td><td>13860</td><td>مشايا جوديعه</td><td class="text-info">2,896,000</td><td class="text-danger">1,000,000</td><td class="text-success fw-bold">1,000,000</td>
                 </tr>
-                <tr data-row='{"id":"5kahraba4","type":"13860","area":"مشايا جوديعه","bld":"1,380,000","view":"بحري","down":"2,990,000","total":"1,380,000"}'>
+                <tr>
                     <td>
                         <div class="d-flex gap-2 justify-content-center">
-                            <span class="action-link" onclick="openEditModal(this)">&gt;</span>
-                            <span class="text-danger admin-only" style="cursor:pointer;" onclick="if(confirm('حذف هذه الوحدة؟')) { this.closest('tr').remove(); }">🗑️</span>
+                            <span class="action-link" data-bs-toggle="modal" data-bs-target="#edit5">&gt;</span>
+                            <span class="text-danger admin-only" style="cursor:pointer;" onclick="if(confirm('حذف؟')) { this.closest('tr').remove(); }">🗑️</span>
                         </div>
                     </td>
-                    <td class="fw-bold text-white">5kahraba4</td><td>13860</td><td>مشايا جوديعه</td><td>1,380,000</td><td>بحري</td><td class="text-info">2,990,000</td><td class="text-success fw-bold">1,380,000</td>
+                    <td class="fw-bold">5kahraba4</td><td>13860</td><td>مشايا جوديعه</td><td class="text-info">2,990,000</td><td class="text-danger">1,380,000</td><td class="text-success fw-bold">1,380,000</td>
                 </tr>
-                <tr data-row='{"id":"6kahraba7","type":"13060","area":"VIPوديعه","bld":"2,200,000","view":"قبلي جولف","down":"2,550,000","total":"2,200,000"}'>
+                <tr>
                     <td>
                         <div class="d-flex gap-2 justify-content-center">
-                            <span class="action-link" onclick="openEditModal(this)">&gt;</span>
-                            <span class="text-danger admin-only" style="cursor:pointer;" onclick="if(confirm('حذف هذه الوحدة؟')) { this.closest('tr').remove(); }">🗑️</span>
+                            <span class="action-link" data-bs-toggle="modal" data-bs-target="#edit6">&gt;</span>
+                            <span class="text-danger admin-only" style="cursor:pointer;" onclick="if(confirm('حذف؟')) { this.closest('tr').remove(); }">🗑️</span>
                         </div>
                     </td>
-                    <td class="fw-bold text-white">6kahraba7</td><td>13060</td><td>VIPوديعه</td><td>2,200,000</td><td>قبلي جولف</td><td class="text-info">2,550,000</td><td class="text-success fw-bold">2,200,000</td>
+                    <td class="fw-bold">6kahraba7</td><td>13060</td><td>VIPوديعه</td><td class="text-info">2,550,000</td><td class="text-danger">2,200,000</td><td class="text-success fw-bold">2,200,000</td>
                 </tr>
-                <tr data-row='{"id":"7kahraba6","type":"ATB اطلنتس45","area":"كروزوديعه","bld":"749,984","view":"كروز","down":"2,343,700","total":"749,984"}'>
+                <tr>
                     <td>
                         <div class="d-flex gap-2 justify-content-center">
-                            <span class="action-link" onclick="openEditModal(this)">&gt;</span>
-                            <span class="text-danger admin-only" style="cursor:pointer;" onclick="if(confirm('حذف هذه الوحدة؟')) { this.closest('tr').remove(); }">🗑️</span>
+                            <span class="action-link" data-bs-toggle="modal" data-bs-target="#edit7">&gt;</span>
+                            <span class="text-danger admin-only" style="cursor:pointer;" onclick="if(confirm('حذف؟')) { this.closest('tr').remove(); }">🗑️</span>
                         </div>
                     </td>
-                    <td class="fw-bold text-white">7kahraba6</td><td>ATB اطلنتس45</td><td>كروزوديعه</td><td>749,984</td><td>كروز</td><td class="text-info">2,343,700</td><td class="text-success fw-bold">749,984</td>
+                    <td class="fw-bold">7kahraba6</td><td>ATB اطلنتس45</td><td>كروزوديعه</td><td class="text-info">2,343,700</td><td class="text-danger">749,984</td><td class="text-success fw-bold">749,984</td>
                 </tr>
-                <tr data-row='{"id":"8kahraba9","type":"22860","area":"نيووديعه","bld":"1,750,000","view":"قبلي","down":"1,885,000","total":"1,750,000"}'>
+                <tr>
                     <td>
                         <div class="d-flex gap-2 justify-content-center">
-                            <span class="action-link" onclick="openEditModal(this)">&gt;</span>
-                            <span class="text-danger admin-only" style="cursor:pointer;" onclick="if(confirm('حذف هذه الوحدة؟')) { this.closest('tr').remove(); }">🗑️</span>
+                            <span class="action-link" data-bs-toggle="modal" data-bs-target="#edit8">&gt;</span>
+                            <span class="text-danger admin-only" style="cursor:pointer;" onclick="if(confirm('حذف؟')) { this.closest('tr').remove(); }">🗑️</span>
                         </div>
                     </td>
-                    <td class="fw-bold text-white">8kahraba9</td><td>22860</td><td>نيووديعه</td><td>1,750,000</td><td>قبلي</td><td class="text-info">1,885,000</td><td class="text-success fw-bold">1,750,000</td>
+                    <td class="fw-bold">8kahraba9</td><td>22860</td><td>نيووديعه</td><td class="text-info">1,885,000</td><td class="text-danger">1,750,000</td><td class="text-success fw-bold">1,750,000</td>
                 </tr>
-                <tr data-row='{"id":"9kahraba8","type":"22760","area":"نيوالترا لوكس مفروش","bld":"2,350,000","view":"قبلي","down":"2,350,000","total":"2,350,000"}'>
+                <tr>
                     <td>
                         <div class="d-flex gap-2 justify-content-center">
-                            <span class="action-link" onclick="openEditModal(this)">&gt;</span>
-                            <span class="text-danger admin-only" style="cursor:pointer;" onclick="if(confirm('حذف هذه الوحدة؟')) { this.closest('tr').remove(); }">🗑️</span>
+                            <span class="action-link" data-bs-toggle="modal" data-bs-target="#edit9">&gt;</span>
+                            <span class="text-danger admin-only" style="cursor:pointer;" onclick="if(confirm('حذف؟')) { this.closest('tr').remove(); }">🗑️</span>
                         </div>
                     </td>
-                    <td class="fw-bold text-white">9kahraba8</td><td>22760</td><td>نيوالترا لوكس مفروش</td><td>2,350,000</td><td>قبلي</td><td class="text-info">2,350,000</td><td class="text-success fw-bold">2,350,000</td>
+                    <td class="fw-bold">9kahraba8</td><td>22760</td><td>نيوالترا لوكس مفروش</td><td class="text-info">2,350,000</td><td class="text-danger">2,350,000</td><td class="text-success fw-bold">2,350,000</td>
                 </tr>
-                <tr data-row='{"id":"10kahraba","type":"12580","area":"مشايامفروش","bld":"3,050,000","view":"قبلي","down":"3,050,000","total":"3,050,000"}'>
+                <tr>
                     <td>
                         <div class="d-flex gap-2 justify-content-center">
-                            <span class="action-link" onclick="openEditModal(this)">&gt;</span>
-                            <span class="text-danger admin-only" style="cursor:pointer;" onclick="if(confirm('حذف هذه الوحدة؟')) { this.closest('tr').remove(); }">🗑️</span>
+                            <span class="action-link" data-bs-toggle="modal" data-bs-target="#edit10">&gt;</span>
+                            <span class="text-danger admin-only" style="cursor:pointer;" onclick="if(confirm('حذف؟')) { this.closest('tr').remove(); }">🗑️</span>
                         </div>
                     </td>
-                    <td class="fw-bold text-white">10kahraba</td><td>12580</td><td>مشايامفروش</td><td>3,050,000</td><td>قبلي</td><td class="text-info">3,050,000</td><td class="text-success fw-bold">3,050,000</td>
+                    <td class="fw-bold">10kahraba</td><td>12580</td><td>مشايامفروش</td><td class="text-info">3,050,000</td><td class="text-danger">3,050,000</td><td class="text-success fw-bold">3,050,000</td>
                 </tr>
-                <tr data-row='{"id":"11kahraba","type":"17180","area":"VIPمفروش","bld":"2,750,000","view":"بحري الجولف","down":"2,750,000","total":"2,750,000"}'>
+                <tr>
                     <td>
                         <div class="d-flex gap-2 justify-content-center">
-                            <span class="action-link" onclick="openEditModal(this)">&gt;</span>
-                            <span class="text-danger admin-only" style="cursor:pointer;" onclick="if(confirm('حذف هذه الوحدة؟')) { this.closest('tr').remove(); }">🗑️</span>
+                            <span class="action-link" data-bs-toggle="modal" data-bs-target="#edit11">&gt;</span>
+                            <span class="text-danger admin-only" style="cursor:pointer;" onclick="if(confirm('حذف؟')) { this.closest('tr').remove(); }">🗑️</span>
                         </div>
                     </td>
-                    <td class="fw-bold text-white">11kahraba</td><td>17180</td><td>VIPمفروش</td><td>2,750,000</td><td>بحري الجولف</td><td class="text-info">2,750,000</td><td class="text-success fw-bold">2,750,000</td>
+                    <td class="fw-bold">11kahraba</td><td>17180</td><td>VIPمفروش</td><td class="text-info">2,750,000</td><td class="text-danger">2,750,000</td><td class="text-success fw-bold">2,750,000</td>
                 </tr>
-                <tr data-row='{"id":"12zoz7","type":"3180","area":"VIPاجهزه كهربيا فقط","bld":"2,600,000","view":"فيو الجولف","down":"2,600,000","total":"2,600,000"}'>
+                <tr>
                     <td>
                         <div class="d-flex gap-2 justify-content-center">
-                            <span class="action-link" onclick="openEditModal(this)">&gt;</span>
-                            <span class="text-danger admin-only" style="cursor:pointer;" onclick="if(confirm('حذف هذه الوحدة؟')) { this.closest('tr').remove(); }">🗑️</span>
+                            <span class="action-link" data-bs-toggle="modal" data-bs-target="#edit12">&gt;</span>
+                            <span class="text-danger admin-only" style="cursor:pointer;" onclick="if(confirm('حذف؟')) { this.closest('tr').remove(); }">🗑️</span>
                         </div>
                     </td>
-                    <td class="fw-bold text-white">12zoz7</td><td>3180</td><td>VIPاجهزه كهربيا فقط</td><td>2,600,000</td><td>فيو الجولف</td><td class="text-info">2,600,000</td><td class="text-success fw-bold">2,600,000</td>
+                    <td class="fw-bold">12zoz7</td><td>3180</td><td>VIPاجهزه كهربيا فقط</td><td class="text-info">2,600,000</td><td class="text-danger">2,600,000</td><td class="text-success fw-bold">2,600,000</td>
                 </tr>
-                <tr data-row='{"id":"13kahraba3","type":"24160","area":"ريفراستلام السنه الجايه","bld":"865,000","view":"فيو ريفر","down":"2,650,000","total":"865,000"}'>
+                <tr>
                     <td>
                         <div class="d-flex gap-2 justify-content-center">
-                            <span class="action-link" onclick="openEditModal(this)">&gt;</span>
-                            <span class="text-danger admin-only" style="cursor:pointer;" onclick="if(confirm('حذف هذه الوحدة؟')) { this.closest('tr').remove(); }">🗑️</span>
+                            <span class="action-link" data-bs-toggle="modal" data-bs-target="#edit13">&gt;</span>
+                            <span class="text-danger admin-only" style="cursor:pointer;" onclick="if(confirm('حذف؟')) { this.closest('tr').remove(); }">🗑️</span>
                         </div>
                     </td>
-                    <td class="fw-bold text-white">13kahraba3</td><td>24160</td><td>ريفراستلام السنه الجايه</td><td>865,000</td><td>فيو ريفر</td><td class="text-info">2,650,000</td><td class="text-success fw-bold">865,000</td>
+                    <td class="fw-bold">13kahraba3</td><td>24160</td><td>ريفراستلام السنه الجايه</td><td class="text-info">2,650,000</td><td class="text-danger">865,000</td><td class="text-success fw-bold">865,000</td>
                 </tr>
-                <tr data-row='{"id":"14geame2","type":"13860","area":"مشايااستلام شهر 12","bld":"887,250","view":"بحري","down":"2,730,000","total":"887,250"}'>
+                <tr>
                     <td>
                         <div class="d-flex gap-2 justify-content-center">
-                            <span class="action-link" onclick="openEditModal(this)">&gt;</span>
-                            <span class="text-danger admin-only" style="cursor:pointer;" onclick="if(confirm('حذف هذه الوحدة؟')) { this.closest('tr').remove(); }">🗑️</span>
+                            <span class="action-link" data-bs-toggle="modal" data-bs-target="#edit14">&gt;</span>
+                            <span class="text-danger admin-only" style="cursor:pointer;" onclick="if(confirm('حذف؟')) { this.closest('tr').remove(); }">🗑️</span>
                         </div>
                     </td>
-                    <td class="fw-bold text-white">14geame2</td><td>13860</td><td>مشايااستلام شهر 12</td><td>887,250</td><td>بحري</td><td class="text-info">2,730,000</td><td class="text-success fw-bold">887,250</td>
+                    <td class="fw-bold">14geame2</td><td>13860</td><td>مشايااستلام شهر 12</td><td class="text-info">2,730,000</td><td class="text-danger">887,250</td><td class="text-success fw-bold">887,250</td>
                 </tr>
-                <tr data-row='{"id":"15kahraba","type":"ارضي بجاردن","area":"12460+27اكواااستلام اخر السنه","bld":"1,620,000","view":"قبلي اكواا","down":"3,632,596","total":"1,620,000"}'>
+                <tr>
                     <td>
                         <div class="d-flex gap-2 justify-content-center">
-                            <span class="action-link" onclick="openEditModal(this)">&gt;</span>
-                            <span class="text-danger admin-only" style="cursor:pointer;" onclick="if(confirm('حذف هذه الوحدة؟')) { this.closest('tr').remove(); }">🗑️</span>
+                            <span class="action-link" data-bs-toggle="modal" data-bs-target="#edit15">&gt;</span>
+                            <span class="text-danger admin-only" style="cursor:pointer;" onclick="if(confirm('حذف؟')) { this.closest('tr').remove(); }">🗑️</span>
                         </div>
                     </td>
-                    <td class="fw-bold text-white">15kahraba</td><td>ارضي بجاردن</td><td>12460+27اكواااستلام اخر السنه</td><td>1,620,000</td><td>قبلي اكواا</td><td class="text-info">3,632,596</td><td class="text-success fw-bold">1,620,000</td>
+                    <td class="fw-bold">15kahraba</td><td>ارضي بجاردن</td><td>12460+27اكواااستلام اخر السنه</td><td class="text-info">3,632,596</td><td class="text-danger">1,620,000</td><td class="text-success fw-bold">1,620,000</td>
                 </tr>
-                <tr data-row='{"id":"16kahraba5","type":"ATB اطلنتس45","area":"كروزوديعه","bld":"1,100,000","view":"كروز","down":"3,456,920","total":"1,100,000"}'>
+                <tr>
                     <td>
                         <div class="d-flex gap-2 justify-content-center">
-                            <span class="action-link" onclick="openEditModal(this)">&gt;</span>
-                            <span class="text-danger admin-only" style="cursor:pointer;" onclick="if(confirm('حذف هذه الوحدة؟')) { this.closest('tr').remove(); }">🗑️</span>
+                            <span class="action-link" data-bs-toggle="modal" data-bs-target="#edit16">&gt;</span>
+                            <span class="text-danger admin-only" style="cursor:pointer;" onclick="if(confirm('حذف؟')) { this.closest('tr').remove(); }">🗑️</span>
                         </div>
                     </td>
-                    <td class="fw-bold text-white">16kahraba5</td><td>ATB اطلنتس45</td><td>كروزوديعه</td><td>1,100,000</td><td>كروز</td><td class="text-info">3,456,920</td><td class="text-success fw-bold">1,100,000</td>
+                    <td class="fw-bold">16kahraba5</td><td>ATB اطلنتس45</td><td>كروزوديعه</td><td class="text-info">3,456,920</td><td class="text-danger">1,100,000</td><td class="text-success fw-bold">1,100,000</td>
                 </tr>
-                <tr data-row='{"id":"17kahraba6","type":"13660","area":"مشاياوديعه","bld":"-","view":"قبلي","down":"-","total":"-"}'>
+                <tr>
                     <td>
                         <div class="d-flex gap-2 justify-content-center">
-                            <span class="action-link" onclick="openEditModal(this)">&gt;</span>
-                            <span class="text-danger admin-only" style="cursor:pointer;" onclick="if(confirm('حذف هذه الوحدة؟')) { this.closest('tr').remove(); }">🗑️</span>
+                            <span class="action-link" data-bs-toggle="modal" data-bs-target="#edit17">&gt;</span>
+                            <span class="text-danger admin-only" style="cursor:pointer;" onclick="if(confirm('حذف؟')) { this.closest('tr').remove(); }">🗑️</span>
                         </div>
                     </td>
-                    <td class="fw-bold text-white">17kahraba6</td><td>13660</td><td>مشاياوديعه</td><td>-</td><td>قبلي</td><td class="text-info">-</td><td class="text-success fw-bold">-</td>
+                    <td class="fw-bold">17kahraba6</td><td>13660</td><td>مشاياوديعه</td><td class="text-info">-</td><td class="text-danger">-</td><td class="text-success fw-bold">-</td>
                 </tr>
-                <tr data-row='{"id":"18Kahraba5","type":"ATB اطلنتس45","area":"كروزوديعه","bld":"1,100,000","view":"كروز","down":"3,456,920","total":"1,100,000"}'>
+                <tr>
                     <td>
                         <div class="d-flex gap-2 justify-content-center">
-                            <span class="action-link" onclick="openEditModal(this)">&gt;</span>
-                            <span class="text-danger admin-only" style="cursor:pointer;" onclick="if(confirm('حذف هذه الوحدة؟')) { this.closest('tr').remove(); }">🗑️</span>
+                            <span class="action-link" data-bs-toggle="modal" data-bs-target="#edit18">&gt;</span>
+                            <span class="text-danger admin-only" style="cursor:pointer;" onclick="if(confirm('حذف؟')) { this.closest('tr').remove(); }">🗑️</span>
                         </div>
                     </td>
-                    <td class="fw-bold text-white">18Kahraba5</td><td>ATB اطلنتس45</td><td>كروزوديعه</td><td>1,100,000</td><td>كروز</td><td class="text-info">3,456,920</td><td class="text-success fw-bold">1,100,000</td>
+                    <td class="fw-bold">18Kahraba5</td><td>ATB اطلنتس45</td><td>كروزوديعه</td><td class="text-info">3,456,920</td><td class="text-danger">1,100,000</td><td class="text-success fw-bold">1,100,000</td>
                 </tr>
-                <tr data-row='{"id":"19Kahraba8","type":"22760","area":"نيومفروش","bld":"2,500,000","view":"قبلي","down":"2,500,000","total":"2,500,000"}'>
+                <tr>
                     <td>
                         <div class="d-flex gap-2 justify-content-center">
-                            <span class="action-link" onclick="openEditModal(this)">&gt;</span>
-                            <span class="text-danger admin-only" style="cursor:pointer;" onclick="if(confirm('حذف هذه الوحدة؟')) { this.closest('tr').remove(); }">🗑️</span>
+                            <span class="action-link" data-bs-toggle="modal" data-bs-target="#edit19">&gt;</span>
+                            <span class="text-danger admin-only" style="cursor:pointer;" onclick="if(confirm('حذف؟')) { this.closest('tr').remove(); }">🗑️</span>
                         </div>
                     </td>
-                    <td class="fw-bold text-white">19Kahraba8</td><td>22760</td><td>نيومفروش</td><td>2,500,000</td><td>قبلي</td><td class="text-info">2,500,000</td><td class="text-success fw-bold">2,500,000</td>
+                    <td class="fw-bold">19Kahraba8</td><td>22760</td><td>نيومفروش</td><td class="text-info">2,500,000</td><td class="text-danger">2,500,000</td><td class="text-success fw-bold">2,500,000</td>
                 </tr>
-                <tr data-row='{"id":"20Kahraba","type":"ارضي بجاردن","area":"1980VIPمفروش","bld":"3,500,000","view":"قبلي","down":"3,500,000","total":"3,500,000"}'>
+                <tr>
                     <td>
                         <div class="d-flex gap-2 justify-content-center">
-                            <span class="action-link" onclick="openEditModal(this)">&gt;</span>
-                            <span class="text-danger admin-only" style="cursor:pointer;" onclick="if(confirm('حذف هذه الوحدة؟')) { this.closest('tr').remove(); }">🗑️</span>
+                            <span class="action-link" data-bs-toggle="modal" data-bs-target="#edit20">&gt;</span>
+                            <span class="text-danger admin-only" style="cursor:pointer;" onclick="if(confirm('حذف؟')) { this.closest('tr').remove(); }">🗑️</span>
                         </div>
                     </td>
-                    <td class="fw-bold text-white">20Kahraba</td><td>ارضي بجاردن</td><td>1980VIPمفروش</td><td>3,500,000</td><td>قبلي</td><td class="text-info">3,500,000</td><td class="text-success fw-bold">3,500,000</td>
+                    <td class="fw-bold">20Kahraba</td><td>ارضي بجاردن</td><td>1980VIPمفروش</td><td class="text-info">3,500,000</td><td class="text-danger">3,500,000</td><td class="text-success fw-bold">3,500,000</td>
                 </tr>
             </tbody>
         </table>
@@ -257,27 +256,33 @@
         </div>
     </div>
 
-    <div class="modal fade" id="editModal" tabindex="-1">
+    <div class="modal fade" id="editModalDynamic" tabindex="-1">
         <div class="modal-dialog modal-lg modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header border-secondary">
-                    <h6 id="modalTitle">تفاصيل الوحدة</h6>
+                    <h6 id="dynamicTitle">تعديل البيانات</h6>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
-                <div class="modal-body">
-                    <div class="row g-2">
-                        <div class="col-md-6"><label class="small text-secondary">الكود / المعرف</label><input type="text" id="m_id" class="form-control" readonly></div>
-                        <div class="col-md-6"><label class="small text-secondary">نوع الوحدة</label><input type="text" id="m_type" class="form-control"></div>
-                        <div class="col-md-12"><label class="small text-secondary">المساحة / التفاصيل</label><input type="text" id="m_area" class="form-control"></div>
-                        <div class="col-md-4"><label class="small text-secondary">المبنى / الحالة</label><input type="text" id="m_bld" class="form-control"></div>
-                        <div class="col-md-4"><label class="small text-secondary">الاتجاه (الفيو)</label><input type="text" id="m_view" class="form-control"></div>
-                        <div class="col-md-4"><label class="small text-primary">المقدم</label><input type="text" id="m_down" class="form-control"></div>
-                        <div class="col-md-12"><label class="small text-success">الإجمالي الكلي</label><input type="text" id="m_total" class="form-control calc-box" readonly></div>
+                <form onsubmit="event.preventDefault(); alert('تمت محاكاة حفظ التعديلات بنجاح!');">
+                    <div class="modal-body">
+                        <div class="row g-2">
+                            <div class="col-md-6"><label class="small text-secondary">المالك</label><input type="text" id="m_owner" class="form-control"></div>
+                            <div class="col-md-3"><label class="small text-secondary">المبنى</label><input type="text" id="m_bld" class="form-control"></div>
+                            <div class="col-md-3"><label class="small text-secondary">الدور</label><input type="text" id="m_floor" class="form-control" value="--"></div>
+                            <div class="col-md-4"><label class="small text-secondary">المساحة</label><input type="text" id="m_area" class="form-control"></div>
+                            <div class="col-md-4"><label class="small text-secondary">المنطقة</label><input type="text" id="m_zone" class="form-control" value="--"></div>
+                            <div class="col-md-4"><label class="small text-secondary">الفيو</label><input type="text" id="m_view" class="form-control" value="قبلي/بحري"></div>
+                            <div class="col-md-4"><label class="small text-primary">المقدم</label><input type="text" id="m_down" class="form-control down_val"></div>
+                            <div class="col-md-4"><label class="small text-primary">القسط</label><input type="text" id="m_inst_val" class="form-control inst_val" value="0"></div>
+                            <div class="col-md-4"><label class="small text-primary">العدد</label><input type="number" id="m_inst_num" class="form-control inst_num" value="0"></div>
+                            <div class="col-md-6"><label class="small text-danger">مجموع الأقساط</label><input type="text" id="m_total_inst" class="form-control calc-box total_inst" readonly></div>
+                            <div class="col-md-6"><label class="small text-success">الإجمالي الكلي</label><input type="text" id="m_total_all" class="form-control calc-box total_all" readonly></div>
+                        </div>
                     </div>
-                </div>
-                <div class="modal-footer border-0">
-                    <button type="button" class="btn btn-secondary w-100" data-bs-dismiss="modal">إغلاق المعاينة</button>
-                </div>
+                    <div class="modal-footer border-0">
+                        <button type="submit" class="btn btn-success w-100 admin-only">حفظ التغييرات (معاينة)</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
@@ -285,22 +290,30 @@
     <div class="modal fade" id="addModal" tabindex="-1">
         <div class="modal-dialog modal-lg modal-dialog-centered">
             <div class="modal-content">
-                <div class="modal-header border-secondary">
-                    <h6>إضافة بيانات جديدة للجدول</h6>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-                </div>
+                <div class="modal-header border-secondary"><h6>إضافة بيانات</h6><button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button></div>
                 <div class="modal-body">
+                    <div class="mb-4 pb-3 border-bottom border-secondary">
+                        <label class="small text-info mb-2">استيراد Excel (المالك، الدور، المبنى، المساحة، المنطقة، الفيو، المقدم، قيمة القسط، عدد الأقساط)</label>
+                        <div class="input-group">
+                            <input type="file" class="form-control" accept=".xlsx, .xls">
+                            <button type="button" class="btn btn-info text-white" onclick="alert('محاكاة الرفع ناجحة! في البيئة الاستاتيكية تحتاجين لرفع الملف المحدث برمجياً.')">رفع</button>
+                        </div>
+                    </div>
                     <form onsubmit="event.preventDefault(); addNewRow();">
                         <div class="row g-2">
-                            <div class="col-md-6"><input type="text" id="add_id" class="form-control" placeholder="المعرف / الكود" required></div>
-                            <div class="col-md-6"><input type="text" id="add_type" class="form-control" placeholder="نوع الوحدة"></div>
-                            <div class="col-md-12"><input type="text" id="add_area" class="form-control" placeholder="المساحة والتفاصيل"></div>
-                            <div class="col-md-4"><input type="text" id="add_bld" class="form-control" placeholder="المبنى"></div>
+                            <div class="col-md-6"><input type="text" id="add_owner" class="form-control" placeholder="المالك" required></div>
+                            <div class="col-md-3"><input type="text" id="add_bld" class="form-control" placeholder="المبنى"></div>
+                            <div class="col-md-3"><input type="text" id="add_floor" class="form-control" placeholder="الدور"></div>
+                            <div class="col-md-4"><input type="text" id="add_area" class="form-control" placeholder="المساحة"></div>
+                            <div class="col-md-4"><input type="text" id="add_zone" class="form-control" placeholder="المنطقة"></div>
                             <div class="col-md-4"><input type="text" id="add_view" class="form-control" placeholder="الفيو"></div>
-                            <div class="col-md-4"><input type="text" id="add_down" class="form-control" placeholder="المقدم"></div>
-                            <div class="col-md-12"><input type="text" id="add_total" class="form-control text-success" placeholder="الإجمالي الكلي"></div>
+                            <div class="col-md-4"><input type="text" id="add_down" class="form-control down_val" placeholder="المقدم"></div>
+                            <div class="col-md-4"><input type="text" id="add_inst_val" class="form-control inst_val" placeholder="القسط"></div>
+                            <div class="col-md-4"><input type="number" id="add_inst_num" class="form-control inst_num" placeholder="العدد"></div>
+                            <div class="col-md-6"><input type="text" class="form-control calc-box total_inst" placeholder="مجموع الأقساط" readonly></div>
+                            <div class="col-md-6"><input type="text" class="form-control calc-box total_all" placeholder="الإجمالي" readonly></div>
                         </div>
-                        <button type="submit" class="btn btn-success w-100 mt-3">إضافة فورية للجدول</button>
+                        <button type="submit" class="btn btn-success w-100 mt-3">إضافة يدوية</button>
                     </form>
                 </div>
             </div>
@@ -309,29 +322,21 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // كلمة المرور الافتراضية للنظام
+        // كلمة المرور الافتراضية
         const SECRET_PASSWORD = "1234"; 
 
-        // دالة التحقق من كلمة المرور وضبط الصلاحيات
         function checkPassword() {
             const enteredPass = document.getElementById('passwordInput').value;
-            const authBtn = document.getElementById('authBtn');
-            
             if (enteredPass === SECRET_PASSWORD) {
                 sessionStorage.setItem('isLoggedIn', 'true');
                 applyAuthStyles();
-                
-                // إغلاق المودال برمجياً
-                const loginModalEl = document.getElementById('loginModal');
-                const modalInstance = bootstrap.Modal.getInstance(loginModalEl);
-                modalInstance.hide();
+                bootstrap.Modal.getInstance(document.getElementById('loginModal')).hide();
                 document.getElementById('passwordInput').value = "";
             } else {
-                alert('كلمة المرور خاطئة! حاول مرة أخرى.');
+                alert('كلمة المرور خاطئة!');
             }
         }
 
-        // تطبيق الأنماط وإظهار أو إخفاء أزرار التحكم طبقاً لحالة الدخول
         function applyAuthStyles() {
             const isLoggedIn = sessionStorage.getItem('isLoggedIn') === 'true';
             const adminElements = document.querySelectorAll('.admin-only');
@@ -339,7 +344,6 @@
 
             if (isLoggedIn) {
                 adminElements.forEach(el => el.style.setProperty('display', 'block', 'important'));
-                // تحويل زر الدخول إلى زر خروج
                 authBtn.innerText = "خروج";
                 authBtn.className = "btn btn-danger btn-sm";
                 authBtn.removeAttribute('data-bs-toggle');
@@ -359,76 +363,83 @@
             applyAuthStyles();
         }
 
-        // دالة لفتح المودال وملء البيانات ديناميكياً
-        function openEditModal(element) {
-            const rowData = JSON.parse(element.closest('tr').getAttribute('data-row'));
-            
-            document.getElementById('modalTitle').innerText = "تفاصيل الوحدة: " + rowData.id;
-            document.getElementById('m_id').value = rowData.id;
-            document.getElementById('m_type').value = rowData.type;
-            document.getElementById('m_area').value = rowData.area;
-            document.getElementById('m_bld').value = rowData.bld;
-            document.getElementById('m_view').value = rowData.view;
-            document.getElementById('m_down').value = rowData.down;
-            document.getElementById('m_total').value = rowData.total;
+        // ربط أزرار المعاينة لملء المودال الموحد ديناميكياً بدلاً من تكرار كود الـ Modal 20 مرة
+        document.querySelectorAll('.action-link').forEach((btn, index) => {
+            btn.addEventListener('click', function() {
+                const row = this.closest('tr');
+                const cells = row.querySelectorAll('td');
+                
+                document.getElementById('dynamicTitle').innerText = "تعديل: " + cells[1].innerText;
+                document.getElementById('m_owner').value = cells[1].innerText;
+                document.getElementById('m_bld').value = cells[2].innerText;
+                document.getElementById('m_area').value = cells[3].innerText;
+                document.getElementById('m_down').value = cells[4].innerText;
+                document.getElementById('m_total_all').value = cells[6].innerText;
 
-            const myModal = new bootstrap.Modal(document.getElementById('editModal'));
-            myModal.show();
+                const myModal = new bootstrap.Modal(document.getElementById('editModalDynamic'));
+                myModal.show();
+            });
+        });
+
+        // تشغيل نظام العمليات الحسابية التلقائي
+        function setupCalculations() {
+            document.querySelectorAll('.modal').forEach(modal => {
+                const inputs = modal.querySelectorAll('.down_val, .inst_val, .inst_num');
+                const calc = () => {
+                    let down = parseFloat(modal.querySelector('.down_val').value.replace(/,/g, '')) || 0;
+                    let iVal = parseFloat(modal.querySelector('.inst_val').value.replace(/,/g, '')) || 0;
+                    let iNum = parseFloat(modal.querySelector('.inst_num').value) || 0;
+                    let sum = iVal * iNum;
+                    
+                    const totalInstEl = modal.querySelector('.total_inst');
+                    const totalAllEl = modal.querySelector('.total_all');
+                    if(totalInstEl) totalInstEl.value = sum.toLocaleString();
+                    if(totalAllEl) totalAllEl.value = (down + sum).toLocaleString();
+                };
+                inputs.forEach(i => i.addEventListener('input', calc));
+            });
         }
 
-        // دالة إضافة صف جديد للجدول مباشرة بالـ JavaScript
+        // إضافة صف جديد للجدول مباشرة
         function addNewRow() {
-            const id = document.getElementById('add_id').value;
-            const type = document.getElementById('add_type').value || '-';
-            const area = document.getElementById('add_area').value || '-';
+            const owner = document.getElementById('add_owner').value;
             const bld = document.getElementById('add_bld').value || '-';
-            const view = document.getElementById('add_view').value || '-';
-            const down = document.getElementById('add_down').value || '-';
-            const total = document.getElementById('add_total').value || '-';
+            const area = document.getElementById('add_area').value || '-';
+            const down = document.getElementById('add_down').value || '0';
+            const instVal = parseFloat(document.getElementById('add_inst_val').value) || 0;
+            const instNum = parseFloat(document.getElementById('add_inst_num').value) || 0;
+            const sumInst = instVal * instNum;
 
             const tbody = document.querySelector('#dataTable tbody');
             const newTr = document.createElement('tr');
             
-            const rowJson = JSON.stringify({id, type, area, bld, view, down, total});
-            newTr.setAttribute('data-row', rowJson);
-            
             newTr.innerHTML = `
                 <td>
                     <div class="d-flex gap-2 justify-content-center">
-                        <span class="action-link" onclick="openEditModal(this)">&gt;</span>
-                        <span class="text-danger admin-only" style="cursor:pointer; display:block !important;" onclick="if(confirm('حذف هذه الوحدة؟')) { this.closest('tr').remove(); }">🗑️</span>
+                        <span class="action-link" data-bs-toggle="modal" data-bs-target="#editModalDynamic">&gt;</span>
+                        <span class="text-danger admin-only" style="cursor:pointer; display:block !important;" onclick="if(confirm('حذف؟')) { this.closest('tr').remove(); }">🗑️</span>
                     </div>
                 </td>
-                <td class="fw-bold text-white">${id}</td><td>${type}</td><td>${area}</td><td>${bld}</td><td>${view}</td><td class="text-info">${down}</td><td class="text-success fw-bold">${total}</td>
+                <td class="fw-bold">${owner}</td><td>${bld}</td><td>${area}</td>
+                <td class="text-info">${parseFloat(down).toLocaleString()}</td>
+                <td class="text-danger">${sumInst.toLocaleString()}</td>
+                <td class="text-success fw-bold">${(parseFloat(down) + sumInst).toLocaleString()}</td>
             `;
-            
             tbody.appendChild(newTr);
-            
-            // إغلاق المودال وتنظيف الحقول
-            const addModalEl = document.getElementById('addModal');
-            bootstrap.Modal.getInstance(addModalEl).hide();
-            document.querySelectorAll('#addModal input').forEach(input => input.value = "");
-            
-            // إعادة تطبيق الصلاحيات للتأكد من ظهور الأزرار بشكل صحيح
+            bootstrap.Modal.getInstance(document.getElementById('addModal')).hide();
             applyAuthStyles();
         }
 
-        // محرك البحث المحلي السريع لتصفية الجدول
+        // محرك البحث المحلي الفوري
         function handleSearch() {
             const input = document.getElementById('searchInput').value.toLowerCase();
             const rows = document.querySelectorAll('#dataTable tbody tr');
-
             rows.forEach(row => {
-                const text = row.innerText.toLowerCase();
-                if(text.includes(input)) {
-                    row.style.display = '';
-                } else {
-                    row.style.display = 'none';
-                }
+                row.style.display = row.innerText.toLowerCase().includes(input) ? '' : 'none';
             });
         }
 
-        // فحص حالة الدخول عند تحميل الصفحة لأول مرة
+        document.addEventListener('shown.bs.modal', setupCalculations);
         document.addEventListener('DOMContentLoaded', applyAuthStyles);
     </script>
 </body>
