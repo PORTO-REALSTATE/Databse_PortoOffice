@@ -1,47 +1,32 @@
-<table class="table">
-    <thead>
-        <tr>
-            <th>الإجمالي</th>
-            <th>الأقساط</th>
-            <th>المقدم</th>
-            <th>المساحة</th>
-            <th>المبنى</th>
-            <th>المالك</th>
-            <th>إجراءات</th>
-        </tr>
-    </thead>
-    <tbody>
-        {# Start the loop HERE, before the row starts #}
-        {% for item in items %}
-        
-            {# Math calculations done per item #}
-            {% set i_num = item.inst_num | float if item.inst_num else 0 %}
-            {% set i_val = item.inst_val | replace(',', '') | float if item.inst_val else 0 %}
-            {% set down = item.down | replace(',', '') | float if item.down else 0 %}
-            {% set sum_inst = i_val * i_num %}
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>Porto Database</title>
+    <link rel="stylesheet" href="style.css"> </head>
+<body>
 
-        <tr>
-            <td>{{ format(down + sum_inst)."{0f.,:}" }}</td>
-            
-            <td>{{ format(sum_inst)."{0f.,:}" }}</td>
-            
-            <td>{{ format(down)."{0f.,:}" }}</td>
-            
-            <td>{{ item.area }}</td>
-            
-            <td>{{ item.bld }}</td>
-            
-            <td><strong>{{ item.owner }}</strong></td>
-            
-            <td>
-                {% if session.get('logged_in') %}
-                    <a href="#" class="edit-btn">⚙️</a>
-                    <a href="#" class="delete-btn">🗑️</a>
-                {% endif %}
-            </td>
-        </tr>
-        
-        {# End the loop HERE, after the row finishes #}
-        {% endfor %}
-    </tbody>
-</table>
+    <div id="toolbar">
+        <input type="text" id="searchInput" placeholder="بحث بالاسم أو المبنى...">
+        <button id="addBtn">➕</button>
+    </div>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>الإجمالي</th>
+                <th>الأقساط</th>
+                <th>المقدم</th>
+                <th>المساحة</th>
+                <th>المبنى</th>
+                <th>المالك</th>
+                <th>إجراءات</th>
+            </tr>
+        </thead>
+        <tbody id="databaseTableBody">
+            </tbody>
+    </table>
+
+    <script src="app.js"></script>
+</body>
+</html>
