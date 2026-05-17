@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نظام إدارة العقارات</title>
+    <title>نظام إدارة العقارات - Porto Database</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body { background: #0d1117; color: #c9d1d9; font-family: 'Segoe UI', sans-serif; }
@@ -24,14 +24,14 @@
         <h5 class="m-0 text-primary">Porto Database</h5>
         <div class="d-flex gap-2">
             <button class="add-btn" data-bs-toggle="modal" data-bs-target="#addModal">+</button>
-            <a href="login.html" class="btn btn-primary btn-sm">دخول</a>
+            <button class="btn btn-primary btn-sm" onclick="alert('واجهة تسجيل الدخول ستتوفر قريباً!')">دخول</button>
         </div>
     </div>
 
-    <form class="mb-3" onsubmit="event.preventDefault();">
+    <form class="mb-3" onsubmit="event.preventDefault(); handleSearch();">
         <div class="input-group">
-            <input type="text" class="form-control bg-dark text-white border-secondary" placeholder="بحث بالاسم أو المبنى...">
-            <button class="btn btn-primary" type="button">بحث</button>
+            <input type="text" id="searchInput" class="form-control bg-dark text-white border-secondary" placeholder="بحث بالاسم أو المبنى...">
+            <button class="btn btn-primary" type="button" onclick="handleSearch()">بحث</button>
         </div>
     </form>
 
@@ -53,7 +53,7 @@
                     <td>
                         <div class="d-flex gap-2 justify-content-center">
                             <span class="action-link" data-bs-toggle="modal" data-bs-target="#editDemo">&gt;</span>
-                            <span class="text-danger" style="cursor:pointer;" onclick="confirm('حذف؟')">🗑️</span>
+                            <span class="text-danger" style="cursor:pointer;" onclick="if(confirm('هل أنت متأكد من الحذف؟')) { this.closest('tr').remove(); }">🗑️</span>
                         </div>
                     </td>
                     <td class="fw-bold">أحمد محمد عبد الله</td>
@@ -63,40 +63,39 @@
                     <td class="text-danger">150,000</td>
                     <td class="text-success fw-bold">200,000</td>
                 </tr>
-
-                <div class="modal fade" id="editDemo" tabindex="-1">
-                    <div class="modal-dialog modal-lg modal-dialog-centered">
-                        <div class="modal-content">
-                            <div class="modal-header border-secondary">
-                                <h6>تعديل: أحمد محمد عبد الله</h6>
-                                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-                            </div>
-                            <form onsubmit="event.preventDefault();">
-                                <div class="modal-body">
-                                    <div class="row g-2">
-                                        <div class="col-md-6"><label class="small text-secondary">المالك</label><input type="text" class="form-control" value="أحمد محمد عبد الله"></div>
-                                        <div class="col-md-3"><label class="small text-secondary">المبنى</label><input type="text" class="form-control" value="مبنى A1"></div>
-                                        <div class="col-md-3"><label class="small text-secondary">الدور</label><input type="text" class="form-control" value="الثالث"></div>
-                                        <div class="col-md-4"><label class="small text-secondary">المساحة</label><input type="text" class="form-control" value="120 م²"></div>
-                                        <div class="col-md-4"><label class="small text-secondary">المنطقة</label><input type="text" class="form-control" value="المرحلة الأولى"></div>
-                                        <div class="col-md-4"><label class="small text-secondary">الفيو</label><input type="text" class="form-control" value="لاندسكيب"></div>
-                                        <div class="col-md-4"><label class="small text-primary">المقدم</label><input type="text" class="form-control down_val" value="50,000"></div>
-                                        <div class="col-md-4"><label class="small text-primary">القسط</label><input type="text" class="form-control inst_val" value="5,000"></div>
-                                        <div class="col-md-4"><label class="small text-primary">العدد</label><input type="number" class="form-control inst_num" value="30"></div>
-                                        <div class="col-md-6"><label class="small text-danger">مجموع الأقساط</label><input type="text" class="form-control calc-box total_inst" readonly></div>
-                                        <div class="col-md-6"><label class="small text-success">الإجمالي الكلي</label><input type="text" class="form-control calc-box total_all" readonly></div>
-                                    </div>
-                                </div>
-                                <div class="modal-footer border-0">
-                                    <button type="button" class="btn btn-success w-100" data-bs-dismiss="modal">حفظ التعديلات (معاينة)</button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-
             </tbody>
         </table>
+    </div>
+
+    <div class="modal fade" id="editDemo" tabindex="-1">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header border-secondary">
+                    <h6>تعديل: أحمد محمد عبد الله</h6>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <form onsubmit="event.preventDefault();">
+                    <div class="modal-body">
+                        <div class="row g-2">
+                            <div class="col-md-6"><label class="small text-secondary">المالك</label><input type="text" class="form-control" value="أحمد محمد عبد الله"></div>
+                            <div class="col-md-3"><label class="small text-secondary">المبنى</label><input type="text" class="form-control" value="مبنى A1"></div>
+                            <div class="col-md-3"><label class="small text-secondary">الدور</label><input type="text" class="form-control" value="الثالث"></div>
+                            <div class="col-md-4"><label class="small text-secondary">المساحة</label><input type="text" class="form-control" value="120 م²"></div>
+                            <div class="col-md-4"><label class="small text-secondary">المنطقة</label><input type="text" class="form-control" value="المرحلة الأولى"></div>
+                            <div class="col-md-4"><label class="small text-secondary">الفيو</label><input type="text" class="form-control" value="لاندسكيب"></div>
+                            <div class="col-md-4"><label class="small text-primary">المقدم</label><input type="text" class="form-control down_val" value="50,000"></div>
+                            <div class="col-md-4"><label class="small text-primary">القسط</label><input type="text" class="form-control inst_val" value="5,000"></div>
+                            <div class="col-md-4"><label class="small text-primary">العدد</label><input type="number" class="form-control inst_num" value="30"></div>
+                            <div class="col-md-6"><label class="small text-danger">مجموع الأقساط</label><input type="text" class="form-control calc-box total_inst" readonly></div>
+                            <div class="col-md-6"><label class="small text-success">الإجمالي الكلي</label><input type="text" class="form-control calc-box total_all" readonly></div>
+                        </div>
+                    </div>
+                    <div class="modal-footer border-0">
+                        <button type="button" class="btn btn-success w-100" data-bs-dismiss="modal">حفظ التعديلات (معاينة)</button>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
 
     <div class="modal fade" id="addModal" tabindex="-1">
@@ -111,7 +110,7 @@
                         <label class="small text-info mb-2">استيراد Excel</label>
                         <div class="input-group">
                             <input type="file" class="form-control" accept=".xlsx, .xls" required>
-                            <button type="button" class="btn btn-info text-white">رفع</button>
+                            <button type="button" class="btn btn-info text-white" onclick="alert('ميزة استيراد ملفات Excel تحتاج لربط برمجى مخصص.')">رفع</button>
                         </div>
                     </form>
                      
@@ -129,7 +128,7 @@
                             <div class="col-md-6"><input type="text" class="form-control calc-box total_inst" placeholder="مجموع الأقساط" readonly></div>
                             <div class="col-md-6"><input type="text" class="form-control calc-box total_all" placeholder="الإجمالي" readonly></div>
                         </div>
-                        <button type="button" class="btn btn-success w-100 mt-3" data-bs-dismiss="modal">إضافة يدوية</button>
+                        <button type="button" class="btn btn-success w-100 mt-3" data-bs-dismiss="modal" onclick="alert('سيتم إضافة البيانات للجدول قريباً!')">إضافة يدوية</button>
                     </form>
                 </div>
             </div>
@@ -169,6 +168,15 @@
                 calc();
             });
         }
+
+        function handleSearch() {
+            const query = document.getElementById('searchInput').value;
+            if(query.trim() !== "") {
+                alert('البحث عن: ' + query + ' (واجهة البحث البرمجية تحتاج لقاعدة بيانات)');
+            }
+        }
+
+        // تشغيل الحسابات تلقائياً بمجرد إظهار النافذة المنبثقة
         document.addEventListener('shown.bs.modal', setupCalculations);
     </script>
 </body>
